@@ -35,11 +35,35 @@
     if (e.code === 'ArrowRight') rightPressed = false;
   });
 
-  function destroyElementAt(x, y) {
+  function destroyCharacterAt(x, y) {
+    let range;
+    if (document.caretRangeFromPoint) {
+      range = document.caretRangeFromPoint(x, y);
+    } else if (document.caretPositionFromPoint) {
+      const pos = document.caretPositionFromPoint(x, y);
+      if (pos) {
+        range = document.createRange();
+        range.setStart(pos.offsetNode, pos.offset);
+      }
+    }
+
+    if (range) {
+      const node = range.startContainer;
+      const offset = range.startOffset;
+      if (node && node.nodeType === Node.TEXT_NODE) {
+        node.nodeValue = node.nodeValue.slice(0, offset) + node.nodeValue.slice(offset + 1);
+        return;
+      }
+    }
+
     const els = document.elementsFromPoint(x, y);
     for (const el of els) {
       if (el === canvas || el.tagName === 'BODY' || el.contains(canvas)) continue;
-      el.style.visibility = 'hidden';
+      if (el.firstChild && el.firstChild.nodeType === Node.TEXT_NODE) {
+        el.firstChild.nodeValue = el.firstChild.nodeValue.substring(1);
+      } else {
+        el.style.visibility = 'hidden';
+      }
       break;
     }
   }
@@ -47,17 +71,17 @@
   function update() {
     if (leftPressed) {
       shipX -= 5;
-      destroyElementAt(shipX, shipY);
+      destroyCharacterAt(shipX, shipY);
     }
     if (rightPressed) {
       shipX += 5;
-      destroyElementAt(shipX, shipY);
+      destroyCharacterAt(shipX, shipY);
     }
     shipX = Math.max(shipWidth / 2, Math.min(canvas.width - shipWidth / 2, shipX));
 
     bullets.forEach((b, i) => {
       b.y -= 7;
-      destroyElementAt(b.x, b.y);
+        destroyCharacterAt(b.x, b.y);
       if (b.y < 0) bullets.splice(i, 1);
     });
   }
