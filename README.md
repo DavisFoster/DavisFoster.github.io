@@ -1,6 +1,6 @@
-# Davis Foster's Playground
+# Davis Foster's Sandbox
 
-This repository holds my lighthearted Jekyll blog for experiments, jokes, and everything in between.
+This repository holds a vibe-coded Jekyll blog for tinkering with Codex.
 
 ## Usage
 
