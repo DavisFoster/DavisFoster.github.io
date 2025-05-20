@@ -52,7 +52,7 @@
       const offset = range.startOffset;
       if (node && node.nodeType === Node.TEXT_NODE) {
         node.nodeValue = node.nodeValue.slice(0, offset) + node.nodeValue.slice(offset + 1);
-        return;
+        return true;
       }
     }
 
@@ -64,8 +64,9 @@
       } else {
         el.style.visibility = 'hidden';
       }
-      break;
+      return true;
     }
+    return false;
   }
 
   function update() {
@@ -81,8 +82,9 @@
 
     bullets.forEach((b, i) => {
       b.y -= 7;
-        destroyCharacterAt(b.x, b.y);
-      if (b.y < 0) bullets.splice(i, 1);
+      if (destroyCharacterAt(b.x, b.y) || b.y < 0) {
+        bullets.splice(i, 1);
+      }
     });
   }
 
