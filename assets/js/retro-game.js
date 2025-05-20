@@ -35,6 +35,20 @@
     if (e.code === 'ArrowRight') rightPressed = false;
   });
 
+  function removeFirstCharacter(node) {
+    if (!node) return false;
+    if (node.nodeType === Node.TEXT_NODE) {
+      if (node.nodeValue.length > 0) {
+        node.nodeValue = node.nodeValue.substring(1);
+        return true;
+      }
+    }
+    for (const child of node.childNodes) {
+      if (removeFirstCharacter(child)) return true;
+    }
+    return false;
+  }
+
   function destroyCharacterAt(x, y) {
     let range;
     if (document.caretRangeFromPoint) {
@@ -52,20 +66,16 @@
       const offset = range.startOffset;
       if (node && node.nodeType === Node.TEXT_NODE) {
         node.nodeValue = node.nodeValue.slice(0, offset) + node.nodeValue.slice(offset + 1);
-        return;
+        return true;
       }
     }
 
     const els = document.elementsFromPoint(x, y);
     for (const el of els) {
       if (el === canvas || el.tagName === 'BODY' || el.contains(canvas)) continue;
-      if (el.firstChild && el.firstChild.nodeType === Node.TEXT_NODE) {
-        el.firstChild.nodeValue = el.firstChild.nodeValue.substring(1);
-      } else {
-        el.style.visibility = 'hidden';
-      }
-      break;
+      if (removeFirstCharacter(el)) return true;
     }
+    return false;
   }
 
   function update() {
@@ -81,8 +91,9 @@
 
     bullets.forEach((b, i) => {
       b.y -= 7;
-        destroyCharacterAt(b.x, b.y);
-      if (b.y < 0) bullets.splice(i, 1);
+      if (destroyCharacterAt(b.x, b.y) || b.y < 0) {
+        bullets.splice(i, 1);
+      }
     });
   }
 
