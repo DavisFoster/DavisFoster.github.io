@@ -59,12 +59,18 @@
     const els = document.elementsFromPoint(x, y);
     for (const el of els) {
       if (el === canvas || el.tagName === 'BODY' || el.contains(canvas)) continue;
-      if (el.firstChild && el.firstChild.nodeType === Node.TEXT_NODE) {
-        el.firstChild.nodeValue = el.firstChild.nodeValue.substring(1);
-      } else {
+
+      // Look for a text node anywhere within the element.
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const textNode = walker.nextNode();
+      if (textNode) {
+        textNode.nodeValue = textNode.nodeValue.substring(1);
+        return true;
+      } else if (el.tagName === 'IMG') {
+        // Non-textual targets like images should still disappear when hit.
         el.style.visibility = 'hidden';
+        return true;
       }
-      return true;
     }
     return false;
   }
