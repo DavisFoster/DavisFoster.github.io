@@ -26,7 +26,8 @@
   document.addEventListener('keydown', (e) => {
     if (e.code === 'ArrowLeft') leftPressed = true;
     if (e.code === 'ArrowRight') rightPressed = true;
-    if (e.code === 'Space') {
+    if (e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
       bullets.push({ x: shipX, y: shipY - shipHeight / 2 });
     }
   });
