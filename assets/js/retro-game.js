@@ -86,10 +86,21 @@
     });
   }
 
+  function drawShip() {
+    ctx.fillStyle = '#0f0';
+    ctx.beginPath();
+    ctx.moveTo(shipX, shipY - shipHeight); // nose
+    ctx.lineTo(shipX - shipWidth, shipY + shipHeight); // left wing
+    ctx.lineTo(shipX - shipWidth / 3, shipY + shipHeight / 2); // left inner
+    ctx.lineTo(shipX + shipWidth / 3, shipY + shipHeight / 2); // right inner
+    ctx.lineTo(shipX + shipWidth, shipY + shipHeight); // right wing
+    ctx.closePath();
+    ctx.fill();
+  }
+
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#0f0';
-    ctx.fillRect(shipX - shipWidth / 2, shipY - shipHeight / 2, shipWidth, shipHeight);
+    drawShip();
     ctx.fillStyle = '#ff0';
     bullets.forEach(b => {
       ctx.fillRect(b.x - 2, b.y - 10, 4, 10);
