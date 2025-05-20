@@ -61,6 +61,7 @@
     for (const el of els) {
       if (el === canvas || el.tagName === 'BODY' || el.contains(canvas)) continue;
 
+      // Look for a text node anywhere within the element.
       // Attempt to remove a single character from the first text node inside
       // the hit element. This prevents entire blocks from disappearing when
       // bullets collide with non-text elements.
@@ -68,10 +69,12 @@
       const textNode = walker.nextNode();
       if (textNode) {
         textNode.nodeValue = textNode.nodeValue.substring(1);
-      } else {
+        return true;
+      } else if (el.tagName === 'IMG') {
+        // Non-textual targets like images should still disappear when hit.
         el.style.visibility = 'hidden';
+        return true;
       }
-      return true;
     }
     return false;
   }
