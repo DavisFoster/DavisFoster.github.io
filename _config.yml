@@ -1,0 +1,17 @@
+baseurl: ""
+title: "Davis Foster's Playground"
+email: davis@example.com
+description: >-
+  A place where I share code snippets, bad jokes, and random musings.
+
+markdown: kramdown
+
+permalink: /:year/:month/:day/:title/
+
+# Build settings
+plugins:
+  - jekyll-feed
+
+# Exclude from processing
+exclude:
+  - README.md
