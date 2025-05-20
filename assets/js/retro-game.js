@@ -26,7 +26,8 @@
   document.addEventListener('keydown', (e) => {
     if (e.code === 'ArrowLeft') leftPressed = true;
     if (e.code === 'ArrowRight') rightPressed = true;
-    if (e.code === 'Space') {
+    if (e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
       bullets.push({ x: shipX, y: shipY - shipHeight / 2 });
     }
   });
@@ -61,6 +62,9 @@
       if (el === canvas || el.tagName === 'BODY' || el.contains(canvas)) continue;
 
       // Look for a text node anywhere within the element.
+      // Attempt to remove a single character from the first text node inside
+      // the hit element. This prevents entire blocks from disappearing when
+      // bullets collide with non-text elements.
       const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
       const textNode = walker.nextNode();
       if (textNode) {
