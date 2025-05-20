@@ -59,8 +59,14 @@
     const els = document.elementsFromPoint(x, y);
     for (const el of els) {
       if (el === canvas || el.tagName === 'BODY' || el.contains(canvas)) continue;
-      if (el.firstChild && el.firstChild.nodeType === Node.TEXT_NODE) {
-        el.firstChild.nodeValue = el.firstChild.nodeValue.substring(1);
+
+      // Attempt to remove a single character from the first text node inside
+      // the hit element. This prevents entire blocks from disappearing when
+      // bullets collide with non-text elements.
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const textNode = walker.nextNode();
+      if (textNode) {
+        textNode.nodeValue = textNode.nodeValue.substring(1);
       } else {
         el.style.visibility = 'hidden';
       }
